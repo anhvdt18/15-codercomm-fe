@@ -53,6 +53,21 @@ const slice = createSlice({
       state.currentPagePosts.unshift(newPost._id);
     },
 
+    // anhvdt18 code start
+
+    updatePostSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+    },
+
+    deletePostSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+      // const newPost = action.payload;
+      // console.log(newPost, "Here");
+    },
+    // anhvdt18 code end
+
     sendPostReactionSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
@@ -100,6 +115,48 @@ export const createPost =
       toast.error(error.message);
     }
   };
+
+// anhvdt18 code start
+
+export const updatePost =
+  ({ data, post }) =>
+  async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const { content, image } = data;
+      const postId = post._id;
+      // upload image to cloudinary
+      const imageUrl = await cloudinaryUpload(image);
+      const response = await apiService.put(`/posts/${postId}`, {
+        content,
+        image: imageUrl,
+      });
+      dispatch(slice.actions.updatePostSuccess(response.data));
+      toast.success("Post Updated successfully");
+      dispatch(getCurrentUserProfile());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
+    }
+  };
+
+export const deletePost =
+  ({ postId }) =>
+  async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      // upload image to cloudinary
+      const deletedPost = await apiService.delete(`/posts/${postId}`);
+      dispatch(slice.actions.deletePostSuccess(deletedPost.data));
+      toast.success("Post is deleted");
+      dispatch(getCurrentUserProfile());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
+    }
+  };
+
+// anhvdt18 code end
 
 export const sendPostReaction =
   ({ postId, emoji }) =>

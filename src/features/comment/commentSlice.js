@@ -98,6 +98,23 @@ export const createComment =
     }
   };
 
+export const deleteComment =
+  ({ postId, content, commentId }) =>
+  async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await apiService.delete(`/comments/${commentId}`, {
+        content,
+        postId,
+      });
+      dispatch(slice.actions.createCommentSuccess(response.data));
+      dispatch(getComments({ postId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
+    }
+  };
+
 export const sendCommentReaction =
   ({ commentId, emoji }) =>
   async (dispatch) => {

@@ -9,11 +9,11 @@ import {
   Container,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getFriendRequests } from "./friendSlice";
+import { getAddingRequests } from "./friendSlice";
 import UserCard from "./UserCard";
 import SearchInput from "../../components/SearchInput";
 
-function FriendRequests() {
+function AddingRequests() {
   const [filterName, setFilterName] = useState("");
   const [page, setPage] = React.useState(1);
 
@@ -28,7 +28,7 @@ function FriendRequests() {
   };
 
   useEffect(() => {
-    dispatch(getFriendRequests({ filterName, page }));
+    dispatch(getAddingRequests({ filterName, page }));
   }, [filterName, page, dispatch]);
 
   // Tuan Anh Code here
@@ -38,7 +38,7 @@ function FriendRequests() {
   return (
     <Container>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Friend Requests
+        Adding Requests
       </Typography>
       <Card sx={{ p: 3 }}>
         <Stack spacing={2}>
@@ -76,4 +76,4 @@ function FriendRequests() {
   );
 }
 
-export default FriendRequests;
+export default AddingRequests;

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { Pagination, Stack, Typography } from "@mui/material";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { getComments } from "./commentSlice";
+import { deleteComment, getComments } from "./commentSlice";
 import CommentCard from "./CommentCard";
 import LoadingScreen from "../../components/LoadingScreen";
 import { COMMENTS_PER_POST } from "../../app/config";
@@ -31,6 +31,11 @@ function CommentList({ postId }) {
     if (postId) dispatch(getComments({ postId }));
   }, [postId, dispatch]);
 
+  const handleDeleteComment = (commentId) => {
+    console.log(commentId, "comment ID here");
+    if (postId) dispatch(deleteComment({ commentId, postId }));
+  };
+
   let renderComments;
 
   if (commentsByPost) {
@@ -38,7 +43,11 @@ function CommentList({ postId }) {
     renderComments = (
       <Stack spacing={1.5}>
         {comments.map((comment) => (
-          <CommentCard key={comment._id} comment={comment} />
+          <CommentCard
+            key={comment._id}
+            comment={comment}
+            handleDeleteComment={handleDeleteComment}
+          />
         ))}
       </Stack>
     );

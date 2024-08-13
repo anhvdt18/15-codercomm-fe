@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Link,
@@ -8,6 +8,9 @@ import {
   Typography,
   CardHeader,
   IconButton,
+  Menu,
+  MenuItem,
+  Modal,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { fDate } from "../../utils/formatTime";
@@ -16,8 +19,36 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PostReaction from "./PostReaction";
 import CommentForm from "../comment/CommentForm";
 import CommentList from "../comment/CommentList";
+import PostFormEdit from "./PostFormEdit";
+import AskModal from "../../components/AskModal";
 
-function PostCard({ post }) {
+function PostCard({ post, handleDeletePost, handleUpdatePost, params }) {
+  // Anhvdt18 Code Start
+
+  const [openConfirm, setOpenConfirm] = React.useState(false);
+  const handleOpenConfirm = () => setOpenConfirm(true);
+  const handleCloseConfirm = () => setOpenConfirm(false);
+
+  const doUpdatePost = (postId) => {
+    handleUpdatePost(postId);
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  // Edit Post Modal
+  const [openEditPost, setOpenEditPost] = useState(false);
+  const handleOpenEditPost = () => setOpenEditPost(true);
+  const handleCloseEditPost = () => setOpenEditPost(false);
+
+  // Anhvdt18 Code End
+
   return (
     <Card>
       <CardHeader
@@ -45,9 +76,39 @@ function PostCard({ post }) {
           </Typography>
         }
         action={
-          <IconButton>
-            <MoreVertIcon sx={{ fontSize: 30 }} />
-          </IconButton>
+          <div>
+            <IconButton onClick={handleClick}>
+              <MoreVertIcon sx={{ fontSize: 30 }}></MoreVertIcon>
+            </IconButton>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem onClick={handleOpenEditPost}>Edit</MenuItem>
+              <Modal open={openEditPost} onClose={handleCloseEditPost}>
+                <Stack width={"50vw"} justifyItems={"center"}>
+                  <PostFormEdit
+                    post={post}
+                    doUpdatePost={doUpdatePost}
+                    params={params}
+                  />
+                </Stack>
+              </Modal>
+
+              <MenuItem onClick={handleOpenConfirm}>Delete</MenuItem>
+              <AskModal
+                open={openConfirm}
+                handleOpen={handleOpenConfirm}
+                handleClose={handleCloseConfirm}
+                execute={() => handleDeletePost(post._id)}
+              />
+            </Menu>
+          </div>
         }
       />
 

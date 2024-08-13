@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { createPost } from "./postSlice";
+import { getPosts, updatePost } from "./postSlice";
 import { LoadingButton } from "@mui/lab";
 
 const yupSchema = Yup.object().shape({
@@ -18,8 +18,10 @@ const defaultValues = {
   image: null,
 };
 
-function PostForm(post) {
+function PostFormEdit({ post, params }) {
   const { isLoading } = useSelector((state) => state.post);
+
+  const { userId, page } = params;
 
   const methods = useForm({
     resolver: yupResolver(yupSchema),
@@ -50,7 +52,9 @@ function PostForm(post) {
   );
 
   const onSubmit = (data) => {
-    dispatch(createPost(data)).then(() => reset());
+    dispatch(updatePost({ data, post }))
+      .then(() => reset())
+      .then(() => dispatch(getPosts({ userId, page })));
   };
 
   return (
@@ -62,7 +66,9 @@ function PostForm(post) {
             multiline
             fullWidth
             rows={4}
-            placeholder="Share what you are thinking here..."
+            placeholder={
+              post._id ? post.content : "Share what you are thinking here..."
+            }
             sx={{
               "& fieldset": {
                 borderWidth: `1px !important`,
@@ -100,4 +106,4 @@ function PostForm(post) {
   );
 }
 
-export default PostForm;
+export default PostFormEdit;

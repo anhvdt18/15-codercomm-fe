@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import PostCard from "./PostCard";
-import { getPosts } from "./postSlice";
+import { getPosts, deletePost, updatePost } from "./postSlice";
 
 function PostList({ userId }) {
   const [page, setPage] = useState(1);
@@ -17,10 +17,24 @@ function PostList({ userId }) {
     if (userId) dispatch(getPosts({ userId, page }));
   }, [dispatch, userId, page]);
 
+  const params = { userId, page };
+
+  const handleDeletePost = (postId) => {
+    if (userId)
+      dispatch(deletePost({ postId })).then(() =>
+        dispatch(getPosts({ userId, page }))
+      );
+  };
+
   return (
     <>
       {posts.map((post) => (
-        <PostCard key={post._id} post={post} />
+        <PostCard
+          key={post._id}
+          post={post}
+          params={params}
+          handleDeletePost={handleDeletePost}
+        />
       ))}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {totalPosts ? (
