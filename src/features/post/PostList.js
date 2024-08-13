@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import PostCard from "./PostCard";
-import { getPosts, deletePost, updatePost } from "./postSlice";
+import { getPosts, deletePost } from "./postSlice";
 
 function PostList({ userId }) {
   const [page, setPage] = useState(1);
