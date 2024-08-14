@@ -96,24 +96,23 @@ function PostCard({ post, handleDeletePost, handleUpdatePost, params }) {
               }}
             >
               <MenuItem onClick={handleOpenEditPost}>Edit</MenuItem>
-              <Modal open={openEditPost} onClose={handleCloseEditPost}>
-                <Stack width={"50vw"} justifyItems={"center"}>
-                  <PostFormEdit
-                    post={post}
-                    doUpdatePost={doUpdatePost}
-                    params={params}
-                  />
-                </Stack>
-              </Modal>
-
               <MenuItem onClick={handleOpenConfirm}>Delete</MenuItem>
-              <AskModal
-                open={openConfirm}
-                handleOpen={handleOpenConfirm}
-                handleClose={handleCloseConfirm}
-                execute={() => handleDeletePost(post._id)}
-              />
             </Menu>
+            <Modal open={openEditPost} onClose={handleCloseEditPost}>
+              <Stack width={"50vw"} justifyItems={"center"}>
+                <PostFormEdit
+                  post={post}
+                  doUpdatePost={doUpdatePost}
+                  params={params}
+                />
+              </Stack>
+            </Modal>
+            <AskModal
+              open={openConfirm}
+              handleOpen={handleOpenConfirm}
+              handleClose={handleCloseConfirm}
+              execute={() => handleDeletePost(post._id)}
+            />
           </div>
         }
       />
