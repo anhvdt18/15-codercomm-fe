@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Box, Card, alpha, Stack } from "@mui/material";
 
 import { FormProvider, FTextField, FUploadImage } from "../../components/form";
@@ -13,13 +13,13 @@ const yupSchema = Yup.object().shape({
   content: Yup.string().required("Content is required"),
 });
 
-const defaultValues = {
-  content: "",
-  image: null,
-};
-
 function PostFormEdit({ post, params }) {
   const { isLoading } = useSelector((state) => state.post);
+
+  const defaultValues = {
+    content: post.content,
+    image: post.image,
+  };
 
   const { userId, page } = params;
 
@@ -33,6 +33,7 @@ function PostFormEdit({ post, params }) {
     setValue,
     formState: { isSubmitting },
   } = methods;
+
   const dispatch = useDispatch();
 
   const handleDrop = useCallback(

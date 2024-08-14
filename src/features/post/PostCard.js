@@ -25,6 +25,8 @@ import AskModal from "../../components/AskModal";
 function PostCard({ post, handleDeletePost, handleUpdatePost, params }) {
   // Anhvdt18 Code Start
 
+  const { userId } = params;
+
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
@@ -78,7 +80,11 @@ function PostCard({ post, handleDeletePost, handleUpdatePost, params }) {
         action={
           <div>
             <IconButton onClick={handleClick}>
-              <MoreVertIcon sx={{ fontSize: 30 }}></MoreVertIcon>
+              {post.author._id === userId ? (
+                <MoreVertIcon sx={{ fontSize: 30 }}></MoreVertIcon>
+              ) : (
+                ""
+              )}
             </IconButton>
             <Menu
               id="basic-menu"
